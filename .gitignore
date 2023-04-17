@@ -1,0 +1,6 @@
+/src/backup
+/modelsim/work
+/impl/temp
+/impl/gwsynthesis
+*.gprj.user
+project_process_config.json
