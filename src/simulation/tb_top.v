@@ -24,6 +24,18 @@ m_seq_gen m_seq_gen_inst(
     .m_seq_out(m_seq_out)
 );
 
+wire complete;
+wire [15:0] parellel_out;
+
+serial_to_parellel serial_to_parellel_inst(
+    .clk(clk),
+    .rst_n(rst_n),
+    .serial_in_req(gen_bit_req),
+    .serial_input(m_seq_out),
+    .parellel_width_cfg(4'd15),
+    .complete(complete),
+    .parellel_output(parellel_out)
+);
 
 
 
