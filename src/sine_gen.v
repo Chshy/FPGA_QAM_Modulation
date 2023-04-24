@@ -1,7 +1,7 @@
 module sine_gen #(
     parameter ADDR_WIDTH = 12,
     parameter DATA_WIDTH = 32,
-    parameter INIT_ADDR  = 12'h000,
+    parameter INIT_ADDR  = 12'h001,
     parameter FILE_PATH  = "sine_data.mif"
 ) (
     input                         clk,
@@ -20,11 +20,11 @@ initial $readmemh(FILE_PATH, sine_data);
 always @(posedge clk or negedge rst_n) begin
     if (~rst_n) begin
         addr <= INIT_ADDR;
+        sine_wav <= sine_data[INIT_ADDR];
     end else begin
         sine_wav <= sine_data[addr];
         addr <= addr + step;
     end
-
 end
 
 

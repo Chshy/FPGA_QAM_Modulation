@@ -1,52 +1,31 @@
-module tb_top (
-);
+module tb_top ();
 
+
+// 产生时钟和reset信号
 reg clk;
 reg rst_n;
-
-reg gen_bit_req;
-wire m_seq_out;
-
 initial begin
     clk = 1'b0;
     rst_n = 1'b0;
-    gen_bit_req = 1'b0;
+    
     #1000
     rst_n = 1'b1;
 end
-always #20 clk = ~clk;
-always #200 gen_bit_req = ~gen_bit_req;
+// T = 90.421963133157191349149943124585 ns
+always #45.210981566578595674574971562293 clk = ~clk; 
 
-m_seq_gen m_seq_gen_inst(
-    .clk(clk),
-    .rst_n(rst_n),
-    .gen_bit_req(gen_bit_req),
-    .m_seq_out(m_seq_out)
-);
-
-wire complete;
-wire [15:0] parellel_out;
-
-serial_to_parellel serial_to_parellel_inst(
-    .clk(clk),
-    .rst_n(rst_n),
-    .serial_in_req(gen_bit_req),
-    .serial_input(m_seq_out),
-    .parellel_width_cfg(4'd15),
-    .complete(complete),
-    .parellel_output(parellel_out)
-);
+// 产生配置信号
+wire mod_type;
+wire [1:0] baud_rate;
+wire filter_enable;
+wire [15:0] carrier_freq_set;
+assign mod_type = 1'b1;
+assign baud_rate = 2'b00; // 00 = 1200  01 = 2400  10 = 4800  11 = 9600
+assign filter_enable = 1'b1;
+assign carrier_freq_set = 16'd50_000;
 
 
 
 
 
-// top top_inst(
-
-
-// );
-    
-
-
-    
 endmodule

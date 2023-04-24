@@ -4,3 +4,5 @@
 /impl/gwsynthesis
 *.gprj.user
 project_process_config.json
+/modelsim/hdlsrc
+/modelsim/wlft*
