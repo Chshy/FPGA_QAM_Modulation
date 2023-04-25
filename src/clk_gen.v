@@ -54,7 +54,7 @@ end
 
 // 产生clk_filter_sample
 wire [12:0] div_filter_sample;
-assign div_filter_sample = 13'd48;
+assign div_filter_sample = 13'd144;
 clk_div clk_filter_sample_gen(
     .clk_in(clk_in),
     .rst_n(rst_n),
@@ -62,6 +62,10 @@ clk_div clk_filter_sample_gen(
     .clk_out(clk_filter_sample)
 );
 
+// (baud_rate == 2'b00) ? 13'd2304 :  //  QPSK( 2400Baud) BitRate =  4800bit/s
+//         (baud_rate == 2'b01) ? 13'd1152 :  //  QPSK( 4800Baud) BitRate =  9600bit/s
+//         (baud_rate == 2'b10) ? 13'd576  :  //  QPSK( 9600Baud) BitRate = 19200bit/s
+//         (baud_rate == 2'b11) ? 13'd288  :  //  QPSK(19200Baud) BitRate = 38400bit/s
 
 // 产生clk_analog_sample
 reg [3:0] div_analog_sample_cnt;
