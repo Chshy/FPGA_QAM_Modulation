@@ -31,7 +31,7 @@ plot(result);
 % axis([0, sine_div - 1, -sine_maxv, sine_maxv]);
 
 % 保存到文件
-write_file = fopen('sin_data.txt', 'w');
+write_file = fopen('sine_data.mif', 'w');
 for i = 1:sine_div
     fprintf(write_file, "%08X\n", result(i));
 end

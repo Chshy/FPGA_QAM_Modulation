@@ -200,5 +200,6 @@ assign step =
     freq < 16'd64389 ? 10'd 190 : 
     freq < 16'd64727 ? 10'd 191 : 
     freq < 16'd65065 ? 10'd 192 : 
-                       10'd 193 ;
+    freq < 16'd65403 ? 10'd 193 : 
+                       10'd 194 ;
 endmodule

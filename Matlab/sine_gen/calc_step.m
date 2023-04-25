@@ -44,6 +44,6 @@ if(gencode)
             break;
         end
     end
-
 end
+fprintf("10'd%4d;\n", my_step + 1);
 
