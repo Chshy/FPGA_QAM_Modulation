@@ -12,14 +12,14 @@
         <File path="src/clk_gen.v" type="file.verilog" enable="1"/>
         <File path="src/constellation_map.v" type="file.verilog" enable="1"/>
         <File path="src/filter_top.v" type="file.verilog" enable="1"/>
-        <File path="src/filters/filter_1200Div48I32.v" type="file.verilog" enable="1"/>
-        <File path="src/filters/filter_2400Div48I32.v" type="file.verilog" enable="1"/>
-        <File path="src/filters/filter_4800Div48I32.v" type="file.verilog" enable="1"/>
-        <File path="src/filters/filter_9600Div48I32.v" type="file.verilog" enable="1"/>
+        <File path="src/filters/FIR_1200Hz.v" type="file.verilog" enable="1"/>
+        <File path="src/filters/FIR_2400Hz.v" type="file.verilog" enable="1"/>
+        <File path="src/filters/FIR_4800Hz.v" type="file.verilog" enable="1"/>
+        <File path="src/filters/FIR_9600Hz.v" type="file.verilog" enable="1"/>
         <File path="src/m_seq_gen.v" type="file.verilog" enable="1"/>
         <File path="src/samples.v" type="file.verilog" enable="1"/>
         <File path="src/serial_to_parellel.v" type="file.verilog" enable="1"/>
-        <File path="src/simulation/tb_total.v" type="file.verilog" enable="1"/>
+        <File path="src/simulation/tb_top.v" type="file.verilog" enable="1"/>
         <File path="src/sine_gen.v" type="file.verilog" enable="1"/>
         <File path="src/top.v" type="file.verilog" enable="1"/>
     </FileList>

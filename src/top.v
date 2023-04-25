@@ -1,14 +1,14 @@
 module top (
     // 时钟和Reset
-    input        clk,                // 主时钟 11059260 Hz
+    input        clk,                // 主时钟 11059200 Hz
     input        rst_n,              // Reset
     // 参数配置端口
-    input        mod_type;           // 调制方式   QPSK(0) / 16QAM(1)
-    input [ 1:0] baud_rate;          // 符号波特率 2400(00) / 4800(01) / 9600(10) / 19200(11)
-    input        filter_enable;      // 使能成型滤波器
-    input [15:0] carrier_freq_set;   // 设置载波频率 (0-65535 Hz, Step = 338 Hz)
+    input        mod_type,           // 调制方式   QPSK(0) / 16QAM(1)
+    input [ 1:0] baud_rate,          // 符号波特率 2400(00) / 4800(01) / 9600(10) / 19200(11)
+    input        filter_enable,      // 使能成型滤波器
+    input [15:0] carrier_freq_set,   // 设置载波频率 (0-65535 Hz, Step = 338 Hz)
     // 调制结果输出
-    output [76:0] mod_iq;    
+    output [31:0] mod_iq    
 );
 
 
@@ -72,27 +72,20 @@ constellation_map constellation_map_inst(
 
 // IQ符号上采样
 wire [31:0] symb_i_upsamp;
-defparam symb_i_upsamp_u.WIDTH = 32;
-defparam symb_i_upsamp_u.SAMPLE_TYPE = 1;
-samples symb_i_upsamp_u(
-    .clk(clk_filter_sample),
-    .rst_n(rst_n),
-    .data_in(symb_i),
-    .data_out(symb_i_upsamp)
-);
 wire [31:0] symb_q_upsamp;
-defparam symb_q_upsamp_u.WIDTH = 32;
-defparam symb_q_upsamp_u.SAMPLE_TYPE = 1;
-samples symb_q_upsamp_u(
-    .clk(clk_filter_sample),
+filter_in_upsamp filter_in_upsamp_inst(
+    .clk_filter_sample(clk_filter_sample),
     .rst_n(rst_n),
-    .data_in(symb_q),
-    .data_out(symb_q_upsamp)
+    .baud_rate(baud_rate),
+    .symb_i(symb_i),
+    .symb_q(symb_q),
+    .symb_i_upsamp(symb_i_upsamp),
+    .symb_q_upsamp(symb_q_upsamp)
 );
 
 // 成型滤波器
-wire [67:0] filter_out_i;
-wire [67:0] filter_out_q;
+wire [65:0] filter_out_i;
+wire [65:0] filter_out_q;
 filter_top filter(
     .clk(clk_filter_sample),
     .rst_n(rst_n),
@@ -104,25 +97,37 @@ filter_top filter(
     .filter_out_q(filter_out_q)
 );
 
-// 滤波器结果上采样
-wire [67:0] filter_out_i_upsamp;
-defparam filter_out_i_upsamp_u.WIDTH = 68;
-defparam filter_out_i_upsamp_u.SAMPLE_TYPE = 0;
-samples filter_out_i_upsamp_u(
-    .clk(clk_analog_sample),
+// 滤波器结果上采样(CIC插值)
+wire [34:0] CIC_i_out;
+wire [34:0] CIC_q_out;
+CIC_upsamp CIC_upsamp_inst (
+    .clk(clk),
     .rst_n(rst_n),
-    .data_in(filter_out_i),
-    .data_out(filter_out_i_upsamp)
+    .baud_rate(baud_rate),
+    .filter_out_i(filter_out_i),
+    .filter_out_q(filter_out_q),
+    .CIC_i_out(CIC_i_out),
+    .CIC_q_out(CIC_q_out)
 );
 
-wire [67:0] filter_out_q_upsamp;
-defparam filter_out_q_upsamp_u.WIDTH = 68;
-defparam filter_out_q_upsamp_u.SAMPLE_TYPE = 0;
-samples filter_out_q_upsamp_u(
+// CIC输出结果上采样
+wire [34:0] CIC_i_out_upsamp;
+defparam CIC_i_out_upsamp_u.WIDTH = 35;
+defparam CIC_i_out_upsamp_u.SAMPLE_TYPE = 0;
+samples CIC_i_out_upsamp_u(
     .clk(clk_analog_sample),
     .rst_n(rst_n),
-    .data_in(filter_out_q),
-    .data_out(filter_out_q_upsamp)
+    .data_in(CIC_i_out),
+    .data_out(CIC_i_out_upsamp)
+);
+wire [34:0] CIC_q_out_upsamp;
+defparam CIC_q_out_upsamp_u.WIDTH = 35;
+defparam CIC_q_out_upsamp_u.SAMPLE_TYPE = 0;
+samples CIC_q_out_upsamp_u(
+    .clk(clk_analog_sample),
+    .rst_n(rst_n),
+    .data_in(CIC_q_out),
+    .data_out(CIC_q_out_upsamp)
 );
 
 // 载波生成
@@ -137,13 +142,14 @@ carrier_gen carrier_gen(
 );
 
 // IQ调制
-wire [76:0] mod_iq;
+wire [68:0] mod_iq_raw;
 IQ_mod IQ_mod(
     .carrier_i(carrier_i),
     .carrier_q(carrier_q),
-    .baseband_i(filter_out_i_upsamp),
-    .baseband_q(filter_out_q_upsamp),
-    .mod_iq(mod_iq)
+    .baseband_i(CIC_i_out_upsamp),
+    .baseband_q(CIC_q_out_upsamp),
+    .mod_iq(mod_iq_raw)
 );
-   
+assign mod_iq = {mod_iq_raw[68], mod_iq_raw[65:35]};
+
 endmodule
