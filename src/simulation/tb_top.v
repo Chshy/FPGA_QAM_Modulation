@@ -19,8 +19,8 @@ wire mod_type;
 wire [1:0] baud_rate;
 wire filter_enable;
 wire [15:0] carrier_freq_set;
-assign mod_type = 1'b1;
-assign baud_rate = 2'b11; // 00 = 1200  01 = 2400  10 = 4800  11 = 9600
+assign mod_type = 1'b1; // 0 = QPSK , 1 = 16QAM
+assign baud_rate = 2'b00; // 00 = 1200  01 = 2400  10 = 4800  11 = 9600
 assign filter_enable = 1'b1;
 assign carrier_freq_set = 16'd65_000;
 
@@ -39,9 +39,5 @@ top top_inst(
     // 调制结果输出
     .mod_iq(mod_iq)
 );
-
-
-
-
 
 endmodule

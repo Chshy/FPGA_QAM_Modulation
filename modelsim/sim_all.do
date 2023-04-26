@@ -4,8 +4,13 @@ quit -sim
 .main clear
 # 编译所有代码
 vlog -reportprogress 300 ../src/*.v
+
 # 开启仿真
 vsim -voptargs=+acc work.tb_top
+
+# 添加配置
+add wave -color #39FF14 -radix binary top_inst/mod_type
+add wave -color #39FF14 -radix binary top_inst/baud_rate
 
 # 添加时钟波形
 add wave -color #82D3FF -radix binary top_inst/clk
@@ -41,6 +46,10 @@ add wave -color #B3FFB3 -radix decimal -format Analog-Step -height 74 -max 1.211
 
 # 运行仿真
 run 50ms
+
+# 调整Analog波形的幅度(好像没用)
+# wave -group {Test} -group {Combined Waveforms} -radix unsigned -format analogautomatic /tb_top/block_inst/combined_abc
+# wave -radix decimal -format analogautomatic top_inst/mod_iq
 
 # 调整时间刻度
 wave zoomfull

@@ -99,8 +99,25 @@ assign f_mux_q =
     baud_rate == 2'b10 ? fout_4800_q :
     baud_rate == 2'b11 ? fout_9600_q : 68'b0;
 
-assign filter_out_i = enable ? f_mux_i : filter_in_i;
-assign filter_out_q = enable ? f_mux_q : filter_in_q;
+// 不启用滤波器时进行插值
+reg [31:0] i_hold;
+reg [31:0] q_hold;
+always @(posedge clk or negedge rst_n) begin
+    if (~rst_n) begin
+        i_hold <= 32'b0;
+        q_hold <= 32'b0;
+    end else begin
+        if(filter_in_i != 32'b0) begin
+            i_hold <= filter_in_i;
+        end
+        if(filter_in_q != 32'b0) begin
+            q_hold <= filter_in_q;
+        end
+    end
+end
+
+assign filter_out_i = enable ? f_mux_i : {{(3){q_hold[31]}}, i_hold[30:0], 32'b0};
+assign filter_out_q = enable ? f_mux_q : {{(3){q_hold[31]}}, q_hold[30:0], 32'b0};
 
 
 // 1200

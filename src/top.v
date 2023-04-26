@@ -65,6 +65,7 @@ wire [31:0] symb_q;
 constellation_map constellation_map_inst(
     .clk(clk_symbol),
     .rst_n(rst_n),
+    .mod_type(mod_type),
     .parellel_input(parellel_output_downsamp),
     .symbol_I(symb_i),
     .symbol_Q(symb_q)
