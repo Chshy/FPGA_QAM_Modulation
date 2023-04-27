@@ -54,3 +54,13 @@
 ![image-20230417175627059](README.assets/image-20230417175627059.png)
 
 ![image-20230417180939020](README.assets/image-20230417180939020.png)
+
+
+
+
+
+## 如何打开Modelsim工程
+
+![image-20230426184505296](README.assets/image-20230426184505296.png)
+
+![image-20230426184645519](README.assets/image-20230426184645519.png)

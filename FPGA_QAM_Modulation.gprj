@@ -11,15 +11,24 @@
         <File path="src/clk_div.v" type="file.verilog" enable="1"/>
         <File path="src/clk_gen.v" type="file.verilog" enable="1"/>
         <File path="src/constellation_map.v" type="file.verilog" enable="1"/>
+        <File path="src/filter_in_upsamp.v" type="file.verilog" enable="1"/>
+        <File path="src/filter_out_upsamp.v" type="file.verilog" enable="1"/>
         <File path="src/filter_top.v" type="file.verilog" enable="1"/>
-        <File path="src/filters/FIR_1200Hz.v" type="file.verilog" enable="1"/>
-        <File path="src/filters/FIR_2400Hz.v" type="file.verilog" enable="1"/>
-        <File path="src/filters/FIR_4800Hz.v" type="file.verilog" enable="1"/>
-        <File path="src/filters/FIR_9600Hz.v" type="file.verilog" enable="1"/>
+        <File path="src/filters/CIC_Interpolator8.v" type="file.verilog" enable="1"/>
+        <File path="src/filters/FIR_RCos_1200Hz.v" type="file.verilog" enable="1"/>
+        <File path="src/filters/FIR_RCos_2400Hz.v" type="file.verilog" enable="1"/>
+        <File path="src/filters/FIR_RCos_4800Hz.v" type="file.verilog" enable="1"/>
+        <File path="src/filters/FIR_RCos_9600Hz.v" type="file.verilog" enable="1"/>
+        <File path="src/filters/FIR_sqrtRCos_1200Hz.v" type="file.verilog" enable="1"/>
+        <File path="src/filters/FIR_sqrtRCos_2400Hz.v" type="file.verilog" enable="1"/>
+        <File path="src/filters/FIR_sqrtRCos_4800Hz.v" type="file.verilog" enable="1"/>
+        <File path="src/filters/FIR_sqrtRCos_9600Hz.v" type="file.verilog" enable="1"/>
         <File path="src/m_seq_gen.v" type="file.verilog" enable="1"/>
+        <File path="src/pilot_insert.v" type="file.verilog" enable="1"/>
+        <File path="src/read_file.v" type="file.verilog" enable="1"/>
         <File path="src/samples.v" type="file.verilog" enable="1"/>
+        <File path="src/samples_insert.v" type="file.verilog" enable="1"/>
         <File path="src/serial_to_parellel.v" type="file.verilog" enable="1"/>
-        <File path="src/simulation/tb_top.v" type="file.verilog" enable="1"/>
         <File path="src/sine_gen.v" type="file.verilog" enable="1"/>
         <File path="src/top.v" type="file.verilog" enable="1"/>
     </FileList>
