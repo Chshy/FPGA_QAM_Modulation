@@ -17,7 +17,7 @@ assign cnt_max = (mod_type_reg == 1'b0) ? 2'b01 : 2'b11;
 always @(posedge clk or negedge rst_n) begin
     if(!rst_n) begin
         mod_type_reg <= 4'b0;
-        conv_cnt <= 2'b01;
+        conv_cnt <= 2'b11;
         
         out_reg <= 4'b0;
         parellel_output <= 4'b0;

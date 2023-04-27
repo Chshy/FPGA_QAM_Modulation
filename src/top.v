@@ -6,19 +6,17 @@ module top (
     input        mod_type,           // 调制方式   QPSK(0) / 16QAM(1)
     input [ 1:0] baud_rate,          // 符号波特率 2400(00) / 4800(01) / 9600(10) / 19200(11)
     input        filter_enable,      // 使能成型滤波器
+    input        use_sqrt_rcos,      // 滤波器使用根升余弦
     input [15:0] carrier_freq_set,   // 设置载波频率 (0-65535 Hz, Step = 338 Hz)
     // 调制结果输出
     output [31:0] mod_iq    
 );
-
-
 
 // 产生时钟信号
 wire clk_bitstream;     // 比特速率
 wire clk_symbol;        // 符号速率
 wire clk_filter_sample; // 滤波器(采样)频率
 wire clk_analog_sample; // 载波(采样)频率
-
 clk_gen clk_generate(
     .clk_in(clk),
     .rst_n(rst_n),
@@ -32,15 +30,17 @@ clk_gen clk_generate(
 
 // 产生比特流
 wire m_seq_out;
-m_seq_gen bit_src(
+wire random_data_gen; // 比特流产生请求
+defparam m_seq_gen_inst.REG_LEN = 13;
+m_seq_gen m_seq_gen_inst(
     .clk(clk_bitstream),
-    .rst_n(rst_n),
+    .rst_n(rst_n & random_data_gen),
     .m_seq_out(m_seq_out)
 );
 
 // 串并转换
 wire [3:0] parellel_output;
-serial_to_parellel s2p_conv(
+serial_to_parellel serial_to_parellel_inst(
     .clk(clk_bitstream),
     .rst_n(rst_n),
     .mod_type(mod_type),
@@ -59,6 +59,17 @@ samples parellel_downsamp_u(
     .data_out(parellel_output_downsamp)
 );
 
+// 导频插入
+wire [3:0] data_parellel;
+pilot_insert pilot_insert_inst(
+    .clk_symbol(clk_symbol),
+    .rst_n(rst_n),
+    .mod_type(mod_type),
+    .data_in(parellel_output_downsamp),
+    .random_data_gen(random_data_gen),
+    .data_out(data_parellel)
+);
+
 // 符号映射
 wire [31:0] symb_i;
 wire [31:0] symb_q;
@@ -66,7 +77,9 @@ constellation_map constellation_map_inst(
     .clk(clk_symbol),
     .rst_n(rst_n),
     .mod_type(mod_type),
-    .parellel_input(parellel_output_downsamp),
+    // .parellel_input(parellel_output_downsamp),
+    // .parellel_input({2'b0, debug_data}),
+    .parellel_input(data_parellel),
     .symbol_I(symb_i),
     .symbol_Q(symb_q)
 );
@@ -76,6 +89,7 @@ wire [31:0] symb_i_upsamp;
 wire [31:0] symb_q_upsamp;
 filter_in_upsamp filter_in_upsamp_inst(
     .clk_filter_sample(clk_filter_sample),
+    .clk_symbol(clk_symbol),
     .rst_n(rst_n),
     .baud_rate(baud_rate),
     .symb_i(symb_i),
@@ -85,13 +99,14 @@ filter_in_upsamp filter_in_upsamp_inst(
 );
 
 // 成型滤波器
-wire [65:0] filter_out_i;
-wire [65:0] filter_out_q;
+wire [64:0] filter_out_i;
+wire [64:0] filter_out_q;
 filter_top filter(
     .clk(clk_filter_sample),
     .rst_n(rst_n),
     .enable(filter_enable),
     .baud_rate(baud_rate),
+    .use_sqrt_rcos(use_sqrt_rcos),
     .filter_in_i(symb_i_upsamp),
     .filter_in_q(symb_q_upsamp),
     .filter_out_i(filter_out_i),

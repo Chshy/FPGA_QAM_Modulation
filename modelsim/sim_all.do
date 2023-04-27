@@ -34,18 +34,18 @@ add wave -color #82D3FF -radix decimal -format Analog-Step -height 74 -max 3 -mi
 add wave -color #82D3FF -radix decimal -format Analog-Step -height 74 -max 3 -min -3 top_inst/symb_q_upsamp
 
 # 添加成型滤波器波形
-add wave -color #B3FFB3 -radix decimal -format Analog-Step -height 74 -max 1.55538e+010 -min -1.34293e+010 top_inst/filter_out_i
-add wave -color #B3FFB3 -radix decimal -format Analog-Step -height 74 -max 1.55538e+010 -min -1.34293e+010 top_inst/filter_out_q
+add wave -color #B3FFB3 -radix decimal -format Analog-Step -height 74 -max 9.41634e+009 -min -9.45273e+009 top_inst/filter_out_i
+add wave -color #B3FFB3 -radix decimal -format Analog-Step -height 74 -max 9.41634e+009 -min -9.45273e+009 top_inst/filter_out_q
 
 # 添加CIC插值波形
-add wave -color #82D3FF -radix decimal -format Analog-Step -height 74 -max 1.55538e+010 -min -1.34293e+010 top_inst/CIC_i_out
-add wave -color #82D3FF -radix decimal -format Analog-Step -height 74 -max 1.55538e+010 -min -1.34293e+010 top_inst/CIC_q_out
+add wave -color #82D3FF -radix decimal -format Analog-Step -height 74 -max 4.70817e+009 -min -4.72637e+009 top_inst/CIC_i_out
+add wave -color #82D3FF -radix decimal -format Analog-Step -height 74 -max 4.70817e+009 -min -4.72637e+009 top_inst/CIC_q_out
 
 # 添加调制结果
-add wave -color #B3FFB3 -radix decimal -format Analog-Step -height 74 -max 1.21127e+009 -min -1.21728e+009 top_inst/mod_iq
+add wave -color #B3FFB3 -radix decimal -format Analog-Step -height 74 -max 3.89432e+008 -min -3.9129e+008 top_inst/mod_iq
 
 # 运行仿真
-run 50ms
+run 20ms
 
 # 调整Analog波形的幅度(好像没用)
 # wave -group {Test} -group {Combined Waveforms} -radix unsigned -format analogautomatic /tb_top/block_inst/combined_abc

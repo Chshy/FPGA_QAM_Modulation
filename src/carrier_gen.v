@@ -12,12 +12,12 @@ calc_step calc_step_u(
     .freq(freq),
     .step(step)
 );
-//E:/Workspace/CurriculumDesign202304/FPGA_QAM_Modulation/sine_data.mif
+
 // I路载波
 defparam sine_gen_I.ADDR_WIDTH = 12;
 defparam sine_gen_I.DATA_WIDTH = 32;
 defparam sine_gen_I.INIT_ADDR = 12'h001;
-defparam sine_gen_I.FILE_PATH = "../Matlab/sine_gen/sine_data.mif";
+defparam sine_gen_I.FILE_PATH = "../data/sine_data.mif";
 sine_gen sine_gen_I
 (
     .clk(clk),
@@ -30,7 +30,7 @@ sine_gen sine_gen_I
 defparam sine_gen_Q.ADDR_WIDTH = 12;
 defparam sine_gen_Q.DATA_WIDTH = 32;
 defparam sine_gen_Q.INIT_ADDR = 12'h401;
-defparam sine_gen_Q.FILE_PATH = "../Matlab/sine_gen/sine_data.mif";
+defparam sine_gen_Q.FILE_PATH = "../data/sine_data.mif";
 sine_gen sine_gen_Q
 (
     .clk(clk),
