@@ -21,7 +21,7 @@
 
 
 
-// `timescale 1 ns / 1 ns
+`timescale 1 ns / 1 ns
 
 module CIC_Interpolator8
                (

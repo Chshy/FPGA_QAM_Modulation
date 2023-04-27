@@ -2,8 +2,8 @@ module CIC_upsamp (
     input         clk,
     input         rst_n,
     input  [ 1:0] baud_rate,
-    input  [65:0] filter_out_i,
-    input  [65:0] filter_out_q,
+    input  [64:0] filter_out_i,
+    input  [64:0] filter_out_q,
     output [34:0] CIC_i_out,
     output [34:0] CIC_q_out
 );
@@ -48,7 +48,7 @@ assign clk_CIC =
 // CIC滤波器
 wire [31:0] CIC_i_in;
 // wire [34:0] CIC_i_out;
-assign CIC_i_in = {filter_out_i[65], filter_out_i[34:3]};
+assign CIC_i_in = {filter_out_i[64], filter_out_i[35:4]};
 CIC_Interpolator8 CIC_i_upsamp (
     .clk(clk_CIC),
     .clk_enable(1'b1),
@@ -60,7 +60,7 @@ CIC_Interpolator8 CIC_i_upsamp (
 
 wire [31:0] CIC_q_in;
 // wire [34:0] CIC_q_out;
-assign CIC_q_in = {filter_out_q[65], filter_out_q[34:3]};
+assign CIC_q_in = {filter_out_q[64], filter_out_q[35:4]};
 CIC_Interpolator8 CIC_q_upsamp (
     .clk(clk_CIC),
     .clk_enable(1'b1),

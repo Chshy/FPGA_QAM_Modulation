@@ -1,6 +1,7 @@
 module filter_in_upsamp (
     input         clk_filter_sample,
     input         rst_n,
+    input         clk_symbol,
     input  [ 1:0] baud_rate,
     input  [31:0] symb_i,
     input  [31:0] symb_q,
@@ -35,24 +36,37 @@ assign clk_samp =
                            clk_9600  ;
 
 
+reg [1:0] clk_symbol_down;
+wire clk_symbol_div2;
+assign clk_symbol_div2 = clk_symbol_down[0];
+always @(posedge clk_symbol or negedge rst_n) begin
+    if(~rst_n) begin
+        clk_symbol_down <= 2'b00;
+    end else begin
+        clk_symbol_down <= clk_symbol_down + 1'b1;
+    end
+end
+
 
 // wire [31:0] symb_i_upsamp;
 defparam symb_i_upsamp_u.WIDTH = 32;
 defparam symb_i_upsamp_u.SAMPLE_TYPE = 1;
-samples symb_i_upsamp_u(
+samples_insert symb_i_upsamp_u(
     .clk(clk_samp),
     .rst_n(rst_n),
     .data_in(symb_i),
+    .data_in_ref({31'b0, clk_symbol_div2}),
     .data_out(symb_i_upsamp)
 );
 
 // wire [31:0] symb_q_upsamp;
 defparam symb_q_upsamp_u.WIDTH = 32;
 defparam symb_q_upsamp_u.SAMPLE_TYPE = 1;
-samples symb_q_upsamp_u(
+samples_insert symb_q_upsamp_u(
     .clk(clk_samp),
     .rst_n(rst_n),
     .data_in(symb_q),
+    .data_in_ref({31'b0, clk_symbol_div2}),
     .data_out(symb_q_upsamp)
 );
 
