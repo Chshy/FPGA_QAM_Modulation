@@ -7,7 +7,7 @@ module top (
     input [ 1:0] baud_rate,          // 符号波特率 2400(00) / 4800(01) / 9600(10) / 19200(11)
     input        filter_enable,      // 使能成型滤波器
     input        use_sqrt_rcos,      // 滤波器使用根升余弦
-    input [15:0] carrier_freq_set,   // 设置载波频率 (0-65535 Hz, Step = 338 Hz)
+    input [15:0] carrier_freq_set,   // 设置载波频率 (0-65535 Hz)
     // 调制结果输出
     output [31:0] mod_iq    
 );
@@ -22,15 +22,15 @@ clk_gen clk_generate(
     .rst_n(rst_n),
     .mod_type(mod_type),
     .baud_rate(baud_rate),
-    .clk_bitstream(clk_bitstream),
-    .clk_symbol(clk_symbol),
-    .clk_filter_sample(clk_filter_sample),
-    .clk_analog_sample(clk_analog_sample)
+    .clk_bitstream(clk_bitstream),         // 比特流速率
+    .clk_symbol(clk_symbol),               // 波特速率
+    .clk_filter_sample(clk_filter_sample), // 滤波器采样速率
+    .clk_analog_sample(clk_analog_sample)  // 载波采样速率
 );
 
 // 产生比特流
 wire m_seq_out;
-wire random_data_gen; // 比特流产生请求
+wire random_data_gen; // 比特流产生请求(Pilot发送完毕后置1)
 defparam m_seq_gen_inst.REG_LEN = 13;
 m_seq_gen m_seq_gen_inst(
     .clk(clk_bitstream),
@@ -44,8 +44,8 @@ serial_to_parellel serial_to_parellel_inst(
     .clk(clk_bitstream),
     .rst_n(rst_n),
     .mod_type(mod_type),
-    .serial_input(m_seq_out),
-    .parellel_output(parellel_output)
+    .serial_input(m_seq_out),         // 串行输入
+    .parellel_output(parellel_output) // 并行输出
 );
 
 // 并行结果下采样
@@ -77,11 +77,9 @@ constellation_map constellation_map_inst(
     .clk(clk_symbol),
     .rst_n(rst_n),
     .mod_type(mod_type),
-    // .parellel_input(parellel_output_downsamp),
-    // .parellel_input({2'b0, debug_data}),
-    .parellel_input(data_parellel),
-    .symbol_I(symb_i),
-    .symbol_Q(symb_q)
+    .parellel_input(data_parellel), // 并行输入
+    .symbol_I(symb_i),              // I路符号
+    .symbol_Q(symb_q)               // Q路符号
 );
 
 // IQ符号上采样
@@ -101,7 +99,7 @@ filter_in_upsamp filter_in_upsamp_inst(
 // 成型滤波器
 wire [64:0] filter_out_i;
 wire [64:0] filter_out_q;
-filter_top filter(
+filter_top filter_top_inst(
     .clk(clk_filter_sample),
     .rst_n(rst_n),
     .enable(filter_enable),
@@ -149,17 +147,18 @@ samples CIC_q_out_upsamp_u(
 // 载波生成
 wire [31:0] carrier_i;
 wire [31:0] carrier_q;
-carrier_gen carrier_gen(
+carrier_gen carrier_gen_inst(
     .clk(clk_analog_sample),
+    .clk_calc(clk),
     .rst_n(rst_n),
     .freq(carrier_freq_set),
-    .carrier_i(carrier_i),
-    .carrier_q(carrier_q)
+    .carrier_i(carrier_i), // I路载波
+    .carrier_q(carrier_q)  // Q路载波
 );
 
 // IQ调制
 wire [68:0] mod_iq_raw;
-IQ_mod IQ_mod(
+IQ_mod IQ_mod_inst(
     .carrier_i(carrier_i),
     .carrier_q(carrier_q),
     .baseband_i(CIC_i_out_upsamp),

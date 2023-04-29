@@ -13,17 +13,17 @@ initial begin
 end
 always #45.211226851851851851851851851852 clk = ~clk; // Freq = 11.0592 MHz
 
-// 产生配置信号
+// 产生配置信号 
 wire mod_type;
 wire [1:0] baud_rate;
 wire filter_enable;
 wire use_sqrt_rcos;
 wire [15:0] carrier_freq_set;
-assign mod_type = 1'b1; // 0 = QPSK , 1 = 16QAM
+assign mod_type = 1'b0; // 0 = QPSK , 1 = 16QAM
 assign baud_rate = 2'b00; // 00 = 2400  01 = 4800  10 = 9600  11 = 19200
 assign filter_enable = 1'b1;
 assign use_sqrt_rcos = 1'b1;
-assign carrier_freq_set = 16'd65_000;
+assign carrier_freq_set = 16'd50_000;
 
 // 输出 
 wire [31:0] mod_iq;
